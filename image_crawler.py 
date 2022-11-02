@@ -1,0 +1,30 @@
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import os
+import requests
+
+def imageDown(url, path):
+    try:
+       os.mkdir(path)
+    except:
+        pass
+    os.chdir(path) # Change  directory
+    url = requests.get(url)
+    bs = BeautifulSoup(url.text, 'html.parser')
+    for index, img_tag in enumerate(bs.findAll("img")):
+        img_link = img_tag.attrs["src"]
+        img_name = str(index) + ".jpg"
+        img_file = requests.get(img_link).content
+        with open(img_name, "wb") as file:    # Save file in cwd
+            file.write(img_file)
+            
+            # print(f"Downloading : {img_name} ....")
+
+imageDown("https://blog.tymoon.eu/", f"{os.path.expanduser('~')}/shinmera")
+
+
+# with open(img_name, "wb") as file:    # Save file in cwd
+#     file.write(img_file)
+
+
+
